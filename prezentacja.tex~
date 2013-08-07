@@ -1,0 +1,32 @@
+\documentclass{beamer}
+\begin{document}
+
+
+\title{Projekt AUG}
+
+\author{Mateusz Jarzyna}
+
+
+
+\begin{frame}
+\titlepage
+\end{frame}
+
+
+\begin{frame}{html2beamer}
+
+Projekt umozliwia zrobienie prezentacji z dokumentu html. \newline Wynikiem jest kompilowalny kod \LaTeX kozystajacy z biblioteki BEAMER
+
+\end{frame}
+
+
+
+\begin{frame}{Zwykle slajdy}
+
+Istnieje mozliwosc tworzenia slajdow z samym tekstem
+
+\end{frame}
+
+
+\end{document}
+

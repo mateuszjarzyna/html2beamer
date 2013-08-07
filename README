@@ -1,0 +1,13 @@
+Zamienia dokument html (przykladowy - html.html) na dokument LaTeX z uzyciem beamer (przykladowy - prezentacja.tex), ktory mozna skomilowac do pdfa za pomoca kompilatora LaTeXa (przykladowy beamer.pdf)
+
+Kompilacja:
+bison -d beamer.y
+flex beamer.l
+g++ beamer.tab.c lex.yy.c -lfl -o beamer
+
+Uruchomienie:
+./beamer < dokument.html > dokument.tex
+
+gdzie do dokument.html jest plikiem wejsciowym, a dokument.tex wyjsciowym plikiem LaTeXa
+
+Wspiera tylko wybrane tagi html

@@ -1,0 +1,67 @@
+%{
+#include <iostream>
+#include "beamer.tab.h"
+using namespace std;
+
+#define YY_DECL extern "C" int yylex()
+%}
+
+napis [a-zA-Z0-9 \.,!?]+
+tresc [a-zA-Z0-9,\./\\`~ {}!?@#$%\^&*()\-_"':;]+
+image [a-zA-z0-9]+.[a-z]{3,4}
+
+%x HTML HEAD TITLE AUTHOR BODY DIV H1 QUOTE OL LI IMG IMG_ALT
+
+%%
+
+<INITIAL,HTML,HEAD,TITLE,AUTHOR,BODY,DIV,H1,QUOTE,OL,LI,IMG,IMG_ALT>[ \t] ;
+"<html>" { BEGIN(HTML); return HTML_START; }
+<HTML>"</html>" { BEGIN(INITIAL); return HTML_END; }
+
+
+<HTML>"<head>" { BEGIN(HEAD); return HEAD_START; }
+<HEAD>"</head>" { BEGIN(HTML); return HEAD_END; }
+
+<HEAD>"<title>" { BEGIN(TITLE); return TITLE_START; }
+<TITLE>"</title>" { BEGIN(HEAD); return TITLE_END; }
+
+<HEAD>"<meta name=\"Author\" content=\"" { BEGIN(AUTHOR); return AUTHOR_START; }
+<AUTHOR>"\" />" { BEGIN(HEAD); return AUTHOR_END; }
+
+<HTML>"<body>" { BEGIN(BODY); return BODY_START; }
+<BODY>"</body>" { BEGIN(HTML); return BODY_END; }
+
+<BODY>"<div>" { BEGIN(DIV); return DIV_START; }
+<DIV>"</div>" { BEGIN(BODY); return DIV_END; }
+<DIV>"<h1>" { BEGIN(H1); return H1_START; }
+<H1>"</h1>" { BEGIN(DIV); return H1_END; }
+
+<DIV>"<blockquote>" { BEGIN(QUOTE); return QUOTE_START; }
+<QUOTE>"</blockquote>" { BEGIN(DIV); return QUOTE_END; }
+
+<DIV>"<img src=\"" { BEGIN(IMG); return IMG_START; }
+<IMG>"\" alt=\"" { BEGIN(IMG_ALT); return IMG_ALT_START; }
+<IMG_ALT>"\" />" { BEGIN(DIV); return IMG_END; }
+
+<DIV>"<ol>" { BEGIN(OL); return OL_START; }
+<OL>"</ol>" { BEGIN(DIV); return OL_END; }
+<OL>"<li>" { BEGIN(LI); return LI_START; }
+<LI>"</li>" { BEGIN(OL); return LI_END; }
+
+
+<TITLE,AUTHOR,H1,LI,IMG_ALT>{napis} {
+				yylval.sval = strdup(yytext);
+				return STRING;
+				}
+<DIV,QUOTE>{tresc} {
+				yylval.sval = strdup(yytext);
+				return STRING;
+				}
+<IMG>{image} {
+				yylval.sval = strdup(yytext);
+				return STRING;
+				}
+
+<INITIAL,HTML,HEAD,TITLE,AUTHOR,BODY,DIV,H1,QUOTE,OL,LI,IMG,IMG_ALT>. ;
+
+%%
